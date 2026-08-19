@@ -1,0 +1,17 @@
+{
+  "name": "ai-food-tracker",
+  "version": "3.0.0",
+  "description": "AI Food Tracker V3 with persistent user accounts, daily body tracking, nutrition history and Gemini food analysis.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=22.5.0"
+  },
+  "dependencies": {
+    "@google/genai": "^1.0.0",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2"
+  }
+}

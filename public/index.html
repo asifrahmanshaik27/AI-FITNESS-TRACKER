@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#111827">
+    <title>AI Food Tracker V3</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app">
+
+    <div id="authScreen" class="auth-screen">
+        <div class="auth-card">
+            <div class="brand-mark">🥗</div>
+            <p class="small-title">AI-FOOD V3</p>
+            <h1>Your food, body & progress history</h1>
+            <p class="auth-copy">Create an account so your weight, meals, measurements and daily progress are saved when you come back.</p>
+
+            <div class="auth-tabs">
+                <button class="auth-tab active" data-mode="login">Log in</button>
+                <button class="auth-tab" data-mode="register">Create account</button>
+            </div>
+
+            <form id="authForm">
+                <div class="input-group" id="nameGroup" hidden>
+                    <label for="authName">Name</label>
+                    <input id="authName" autocomplete="name" placeholder="Your name">
+                </div>
+
+                <div class="input-group">
+                    <label for="authEmail">Email</label>
+                    <input id="authEmail" type="email" autocomplete="email" placeholder="you@example.com" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="authPassword">Password</label>
+                    <input id="authPassword" type="password" autocomplete="current-password" placeholder="At least 8 characters" minlength="8" required>
+                </div>
+
+                <button class="primary-button" id="authSubmit" type="submit">Log in</button>
+                <p class="form-message" id="authMessage"></p>
+            </form>
+
+            <p class="privacy-note">Your account data is stored in the app database. Never share your password or API key.</p>
+        </div>
+    </div>
+
+    <div id="appScreen" hidden>
+        <header class="header">
+            <div>
+                <p class="small-title">AI-FOOD V3</p>
+                <h1 id="welcomeTitle">Welcome back 👋</h1>
+                <p class="last-visit" id="lastVisit"></p>
+            </div>
+            <div class="header-actions">
+                <button class="icon-button" id="historyBtn" title="History">📈</button>
+                <button class="icon-button" id="settingsBtn" title="Profile settings">⚙️</button>
+                <button class="icon-button" id="logoutBtn" title="Log out">↪</button>
+            </div>
+        </header>
+
+        <main>
+            <section class="summary-card">
+                <div class="summary-header">
+                    <div>
+                        <p>Today's Progress</p>
+                        <h2 id="todayDate">Today</h2>
+                    </div>
+                    <span class="fire">🔥</span>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span>⚖️ Weight</span>
+                        <strong id="todayWeight">—</strong>
+                        <small id="weightChange">No previous entry</small>
+                    </div>
+                    <div class="stat-card">
+                        <span>🎂 Age</span>
+                        <strong id="todayAge">—</strong>
+                        <small>years</small>
+                    </div>
+                    <div class="stat-card">
+                        <span>🔥 Calories</span>
+                        <strong><span id="caloriesConsumed">0</span> <small>/ <span id="calorieGoal">—</span></small></strong>
+                        <small>kcal</small>
+                    </div>
+                    <div class="stat-card">
+                        <span>💪 Protein</span>
+                        <strong><span id="proteinConsumed">0</span> <small>/ <span id="proteinGoal">—</span></small></strong>
+                        <small>g</small>
+                    </div>
+                    <div class="stat-card">
+                        <span>💧 Water</span>
+                        <strong id="waterConsumed">0</strong>
+                        <small>ml today</small>
+                    </div>
+                </div>
+
+                <div class="nutrition-item">
+                    <div class="nutrition-top"><span>Calories</span><strong><span id="calorieProgressText">0%</span></strong></div>
+                    <div class="progress"><div class="progress-bar calories-bar" id="calorieProgress"></div></div>
+                </div>
+                <div class="nutrition-item">
+                    <div class="nutrition-top"><span>Protein</span><strong><span id="proteinProgressText">0%</span></strong></div>
+                    <div class="progress"><div class="progress-bar protein-bar" id="proteinProgress"></div></div>
+                </div>
+            </section>
+
+            <section class="body-entry-section">
+                <div class="section-title">
+                    <h2>Daily Body Check-in</h2>
+                    <span>Saved to your account</span>
+                </div>
+
+                <div class="body-entry-grid">
+                    <div class="input-group">
+                        <label for="weightTodayInput">Weight (kg)</label>
+                        <input type="number" id="weightTodayInput" min="30" max="300" step="0.1" placeholder="70.0">
+                    </div>
+                    <div class="input-group">
+                        <label for="bodyFatInput">Body fat %</label>
+                        <input type="number" id="bodyFatInput" min="0" max="100" step="0.1" placeholder="Optional">
+                    </div>
+                    <div class="input-group">
+                        <label for="Age input">Age</label>
+                        <input type="number" id="ageTodayInput" min="0" max="100" step="1" placeholder="Optional">
+                    </div>
+                    <div class="input-group">
+                        <label for="waistInput">Waist (cm)</label>
+                        <input type="number" id="waistInput" min="0" max="300" step="0.1" placeholder="Optional">
+                    </div>
+                    <div class="input-group">
+                        <label for="chestInput">Chest (cm)</label>
+                        <input type="number" id="chestInput" min="0" max="300" step="0.1" placeholder="Optional">
+                    </div>
+                    <div class="input-group">
+                        <label for="armInput">Arm (cm)</label>
+                        <input type="number" id="armInput" min="0" max="100" step="0.1" placeholder="Optional">
+                    </div>
+                    <div class="input-group">
+                        <label for="thighInput">Thigh (cm)</label>
+                        <input type="number" id="thighInput" min="0" max="150" step="0.1" placeholder="Optional">
+                    </div>
+                </div>
+                <button class="save-button" id="saveBody">💾 Save Today's Body Data</button>
+            </section>
+
+            <section class="camera-section">
+                <label for="foodPhoto" class="camera-button">
+                    <div class="camera-icon">📸</div>
+                    <div>
+                        <strong>Take Food Photo</strong>
+                        <span>AI will analyze your meal and save it to your history</span>
+                    </div>
+                </label>
+                <input type="file" id="foodPhoto" accept="image/*" capture="environment" hidden>
+            </section>
+
+            <section class="photo-section" id="photoSection" hidden>
+                <div class="section-title"><h2>Your Food</h2><button id="removePhoto">Remove</button></div>
+                <div class="photo-card"><img id="foodPreview" alt="Food preview"></div>
+                <button class="analyze-button" id="analyzeBtn">🤖 Analyze With AI</button>
+            </section>
+
+            <section class="loading-section" id="loadingSection" hidden>
+                <div class="loader">🤖</div>
+                <h3>AI is analyzing your food...</h3>
+                <p>Identifying food and estimating nutrition</p>
+            </section>
+
+            <section class="result-section" id="resultSection" hidden>
+                <div class="section-title"><h2>AI Analysis</h2><span class="ai-badge">AI RESULT</span></div>
+                <div class="food-result-card">
+                    <div class="food-result-image"><img id="resultImage" alt="Analyzed food"></div>
+                    <div class="result-info"><h3 id="foodName">Food</h3><p id="foodDescription">Nutrition estimate</p></div>
+                </div>
+                <div class="confidence-card"><span>AI confidence</span><strong id="confidence">0%</strong></div>
+
+                <div class="input-group"><label for="servingInput">Serving Size</label><input id="servingInput" placeholder="1 serving"></div>
+                <div class="input-group"><label for="mealType">Meal</label>
+                    <select id="mealType">
+                        <option value="Breakfast">🍳 Breakfast</option>
+                        <option value="Lunch">🍛 Lunch</option>
+                        <option value="Dinner">🍽️ Dinner</option>
+                        <option value="Snack">🍌 Snack</option>
+                    </select>
+                </div>
+                <div class="input-group"><label for="foodInput">Food Name</label><input id="foodInput" placeholder="Food name"></div>
+                <div class="two-columns">
+                    <div class="input-group"><label for="calorieInput">Calories</label><input type="number" id="calorieInput" min="0"></div>
+                    <div class="input-group"><label for="proteinInput">Protein (g)</label><input type="number" id="proteinInput" min="0" step="0.1"></div>
+                </div>
+                <div class="two-columns">
+                    <div class="input-group"><label for="carbsInput">Carbs (g)</label><input type="number" id="carbsInput" min="0" step="0.1"></div>
+                    <div class="input-group"><label for="fatInput">Fat (g)</label><input type="number" id="fatInput" min="0" step="0.1"></div>
+                </div>
+                <button class="save-button" id="saveMeal">✅ Add Meal To My History</button>
+            </section>
+
+            <section class="hydration-section">
+                <div class="section-title"><h2>💧 Water</h2><span id="waterProgressText">0 / 2500 ml</span></div>
+                <div class="water-progress"><div class="progress"><div class="progress-bar water-bar" id="waterProgress"></div></div></div>
+                <div class="water-target-row">
+                    <label for="waterTargetInput">Daily target</label>
+                    <div class="water-target-controls"><input type="number" id="waterTargetInput" min="1000" max="6000" step="50" value="2500"><span>ml</span><button class="small-save" id="saveWaterTarget">Save</button></div>
+                </div>
+                <div class="water-buttons">
+                    <button class="quick-card" data-water="250">+250 ml</button>
+                    <button class="quick-card" data-water="500">+500 ml</button>
+                    <button class="quick-card" data-water="750">+750 ml</button>
+                </div>
+                <div class="water-entries" id="waterEntries"></div>
+            </section>
+
+            <section class="quick-actions">
+                <button class="quick-card" id="openHistory">📊 View full history</button>
+            </section>
+
+            <section class="meals-section">
+                <div class="section-title"><h2>Today's Meals</h2><span id="mealCount">0 meals</span></div>
+                <div class="meal-list" id="mealList"></div>
+            </section>
+        </main>
+    </div>
+
+    <div class="modal" id="settingsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div><h2>👤 Personal Profile</h2><p class="modal-subtitle">Your targets are recalculated when your weight changes.</p></div>
+                <button id="closeSettings">✕</button>
+            </div>
+
+            <div class="input-group"><label for="ageInput">Age</label><input type="number" id="ageInput" min="18" max="120"></div>
+            <div class="input-group"><label for="sexInput">Sex</label><select id="sexInput"><option value="male">Male</option><option value="female">Female</option></select></div>
+            <div class="input-group"><label for="heightInput">Height (cm)</label><input type="number" id="heightInput" min="100" max="250" step="0.1"></div>
+            <div class="input-group"><label for="activityInput">Activity Level</label>
+                <select id="activityInput">
+                    <option value="1.2">🛋️ Sedentary — little/no exercise</option>
+                    <option value="1.375">🚶 Lightly Active — 1–3 days/week</option>
+                    <option value="1.55">🏃 Moderately Active — 3–5 days/week</option>
+                    <option value="1.725">🏋️ Very Active — 6–7 days/week</option>
+                    <option value="1.9">🔥 Extremely Active — hard training/physical job</option>
+                </select>
+            </div>
+            <div class="input-group"><label for="goalInput">Goal</label>
+                <select id="goalInput">
+                    <option value="maintain">⚖️ Maintain Weight</option>
+                    <option value="loss">📉 Lose Weight</option>
+                    <option value="gain">📈 Gain Weight</option>
+                </select>
+            </div>
+
+            <div class="calculator-results">
+                <div class="calculator-result-row"><span>🔥 BMR</span><strong id="calculatedBMR">— kcal</strong></div>
+                <div class="calculator-result-row"><span>⚡ Maintenance</span><strong id="calculatedTDEE">— kcal</strong></div>
+                <div class="calculator-result-row highlight"><span>🎯 Daily Calories</span><strong id="calculatedCalories">— kcal</strong></div>
+                <div class="calculator-result-row"><span>💪 Protein</span><strong id="calculatedProtein">— g</strong></div>
+                <div class="calculator-result-row"><span>🥑 Fat</span><strong id="calculatedFat">— g</strong></div>
+                <div class="calculator-result-row"><span>🍚 Carbohydrates</span><strong id="calculatedCarbs">— g</strong></div>
+                <div class="calculator-result-row"><span>📊 BMI</span><strong id="calculatedBMI">—</strong></div>
+                <div class="bmi-category"><span>BMI Category</span><strong id="bmiCategory">—</strong></div>
+            </div>
+
+            <p class="calculator-note">These values are estimates and are not medical advice.</p>
+            <button class="save-button" id="saveGoals">💾 Save My Profile & Targets</button>
+        </div>
+    </div>
+
+    <div class="modal" id="historyModal">
+        <div class="modal-content history-content">
+            <div class="modal-header">
+                <div><h2>📈 Your Complete History</h2><p class="modal-subtitle">Your saved data stays with your account.</p></div>
+                <button id="closeHistory">✕</button>
+            </div>
+
+            <div class="history-summary" id="historySummary"></div>
+
+            <h3 class="history-heading">Weight history</h3>
+            <div class="history-table-wrap">
+                <table class="history-table">
+                    <thead><tr><th>Date</th><th>Weight</th><th>Change</th></tr></thead>
+                    <tbody id="weightHistory"></tbody>
+                </table>
+            </div>
+
+            <h3 class="history-heading">Body measurements</h3>
+            <div class="history-table-wrap">
+                <table class="history-table">
+                    <thead><tr><th>Date</th><th>Body fat</th><th>Waist</th><th>Chest</th><th>Arm</th><th>Thigh</th></tr></thead>
+                    <tbody id="measurementHistory"></tbody>
+                </table>
+            </div>
+
+            <h3 class="history-heading">Daily nutrition history</h3>
+            <div class="history-table-wrap">
+                <table class="history-table">
+                    <thead><tr><th>Date</th><th>Meals</th><th>Calories</th><th>Protein</th><th>Carbs</th><th>Fat</th></tr></thead>
+                    <tbody id="nutritionHistory"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="app.js"></script>
+</body>
+</html>
